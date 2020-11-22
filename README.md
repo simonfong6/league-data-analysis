@@ -19,3 +19,7 @@ league-data-analysis/data/
 # Plan
 - Shared helper functions in `tools.py` and various other files we create.
 - We each use our own notebooks to do analysis. (Easier for version control.)
+
+# Specifications
+- Python3
+- `snake_case` but not too picky.
