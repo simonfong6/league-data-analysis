@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from league_api import *
+
 
 DATA_DIRECTORY = './data'
 
@@ -23,4 +25,6 @@ def list_data_files():
 
 def load(name):
     path = data_path(name)
-    df = pd.read_pickle(name)
+    df = pd.read_pickle(path)
+    return df
+
