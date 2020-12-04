@@ -1,6 +1,7 @@
 """
 Various tools and functions to operate on the data which is reusable.
 """
+import json
 import os
 
 import matplotlib.pyplot as plt
@@ -40,3 +41,7 @@ def create_subset(name, size):
 
     print(f'Saved to {subset_path}')
     return subset
+
+def display_dict(dict_obj):
+    string = json.dumps(dict_obj, indent=4)
+    print(string)
