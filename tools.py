@@ -23,8 +23,20 @@ def list_data_files():
     data_files.sort()
     return data_files
 
+
 def load(name):
     path = data_path(name)
     df = pd.read_pickle(path)
     return df
 
+
+def create_subset(name, size):
+    df = load(name)
+    subset = df[:size]
+
+    subset_name, _ = name.split('.')
+    subset_path = f'data/{subset_name}_subset_{size}.pickle'
+    subset.to_pickle(subset_path)
+
+    print(f'Saved to {subset_path}')
+    return subset
