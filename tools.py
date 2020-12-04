@@ -40,8 +40,14 @@ def create_subset(name, size):
     subset.to_pickle(subset_path)
 
     print(f'Saved to {subset_path}')
-    return subset
 
 def display_dict(dict_obj):
     string = json.dumps(dict_obj, indent=4)
     print(string)
+
+def create_example_participant():
+    match_df = load('match_data_version1_subset_1000.pickle')
+    participants = match_df['participants']
+    participant = participants[0][0]
+    with open('data/example_participant.json', 'w') as f:
+        json.dump(participants[0][0], f, indent=4)
