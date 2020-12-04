@@ -53,3 +53,41 @@ def create_example_participant():
     participant = participants[0][0]
     with open('data/example_participant.json', 'w') as f:
         json.dump(participants[0][0], f, indent=4)
+
+def filter_participant(participant):
+    keys = [
+        'participantId',
+        'teamId',
+        'championId',
+    ]
+
+    stats_keys = [
+        'win',
+        'item0',
+        'item1',
+        'item2',
+        'item3',
+        'item4',
+        'item5',
+        'item6',
+        'kills',
+        'deaths',
+        'assists',
+    ]
+
+    timeline_keys = [
+        'role',
+        'lane',
+    ]
+
+    filtered = {}
+    for key in keys:
+        filtered[key] = participant[key]
+
+    for key in stats_keys:
+        filtered[key] = participant['stats'][key]
+        
+    for key in timeline_keys:
+        filtered[key] = participant['timeline'][key]
+    
+    return filtered

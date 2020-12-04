@@ -13,7 +13,7 @@ def create_champion_dict():
 
     champion_list = data['data']
 
-    champion_id_to_champion = {champion['key']: champion for name, champion in champion_list.items()}
+    champion_id_to_champion = {int(champion['key']): champion for name, champion in champion_list.items()}
 
     return champion_id_to_champion
 
