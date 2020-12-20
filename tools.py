@@ -138,3 +138,28 @@ def filter_matching_lanes(current_champion_id, opponent_champion_id, matches):
     
     
     return filtered
+
+def display_participant(participant):
+    champion_id_to_champion = create_champion_dict()
+    item_map = create_item_map()
+
+    champion_id = participant['championId']
+    champion_name = champion_id_to_champion[champion_id]['id']
+    print(champion_name)
+    display_champion(champion_name)
+
+    for key, value in participant.items():
+        if 'lane' == key:
+            print(f"Lane: {value}")
+
+        if 'item' not in key:
+            continue
+
+        # No item in spot.
+        if value == 0:
+            continue
+        item_id = str(value)
+        item_name = item_map[item_id]['name']
+        print(item_id)
+        print(item_name)
+        display_item(item_id)

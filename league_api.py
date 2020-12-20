@@ -1,4 +1,5 @@
 import requests
+from functools import lru_cache
 
 from IPython.core.display import display
 from IPython.core.display import HTML
@@ -7,7 +8,9 @@ CHAMPION_URL = 'http://ddragon.leagueoflegends.com/cdn/10.22.1/data/en_US/champi
 
 ITEM_URL = 'http://ddragon.leagueoflegends.com/cdn/10.22.1/data/en_US/item.json'
 
-def create_champion_dict():
+@lru_cache(None)
+def create_champion_dict(patch_version='10.22.1'):
+    print("Creating champion dictionary.")
     response = requests.get(CHAMPION_URL)
     data = response.json()
 
@@ -17,13 +20,14 @@ def create_champion_dict():
 
     return champion_id_to_champion
 
-def create_champion_name_to_champion_id_map():
+@lru_cache(None)
+def create_champion_name_to_champion_id_map(patch_version='10.22.1'):
     response = requests.get(CHAMPION_URL)
     data = response.json()
 
     champion_list = data['data']
 
-    champion_name_to_champion_id = {champion['id']: champion['key'] for name, champion in champion_list.items()}
+    champion_name_to_champion_id = {champion['id']: int(champion['key']) for name, champion in champion_list.items()}
 
     return champion_name_to_champion_id
 
@@ -32,7 +36,8 @@ def convert_champion_name_to_id(name, name_id_map=None):
         name_id_map = create_champion_name_to_champion_id_map()
     return name_id_map[name]
 
-def create_item_map():
+@lru_cache(None)
+def create_item_map(patch_version='10.22.1'):
     response = requests.get(ITEM_URL)
     data = response.json()
     item_map = data['data']
@@ -42,7 +47,7 @@ def create_item_map():
 def create_item_name_to_id_map():
     item_map = create_item_map()
 
-    item_name_to_id_map = {item['name']: id for id, item in item_map.items()}
+    item_name_to_id_map = {item['name']: int(id) for id, item in item_map.items()}
 
     return item_name_to_id_map
 
