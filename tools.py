@@ -161,6 +161,17 @@ def filter_matching_lanes(current_champion_id, opponent_champion_id, lane, match
     
     return filtered
 
+def reduce_participants(participants_series, champion_id):
+    def find_champion(participants):
+        for participant in participants:
+            if participant['championId'] == champion_id:
+                return participant
+        raise ValueError("Not found.")
+
+    reduced = participants_series.apply(find_champion)
+
+    return reduced
+
 def display_participant(participant):
     champion_id_to_champion = create_champion_dict()
     item_map = create_item_map()
