@@ -91,3 +91,22 @@ def filter_participant(participant):
         filtered[key] = participant['timeline'][key]
     
     return filtered
+
+
+def champion_name_to_champion_id(champion_name):
+    champion_id = None
+
+    return champion_id
+
+
+def winrate(current_champion, opponent_champion, item, dataset=None):
+    # Filter for matches with current and opponent_champion
+    # Filter for item
+    return 0.5
+
+
+def filter_matching_lanes(current_champion, opponent_champion, matches):
+    participants = matches['participants']
+    filtered = []
+    
+    return filtered
