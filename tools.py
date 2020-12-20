@@ -119,23 +119,45 @@ def create_has_champion_id_func(champion_id):
     return lambda participants: has_champion_id(participants, champion_id)
 
 
-def filter_matching_lanes(current_champion_id, opponent_champion_id, matches):
+def create_champion_on_lane(champion_id, lane):
+
+    def champion_on_lane(participants):
+        # Filter for champion.
+        matches_champion_func = lambda participant: participant['championId'] == champion_id
+        matches_champion = filter(matches_champion_func, participants)
+        matches_champion = list(matches_champion)
+        participant, = matches_champion
+
+        # Check if lane matches.
+        return participant['timeline']['lane'] == lane
+
+    return champion_on_lane
+
+
+def filter_matching_lanes(current_champion_id, opponent_champion_id, lane, matches):
     participants = matches['participants']
 
     filtered = participants
 
     # Filter for has current champion.
     has_current_champion = create_has_champion_id_func(current_champion_id)
-    conditions = participants.apply(has_current_champion)
+    conditions = filtered.apply(has_current_champion)
     filtered =  filtered[conditions]
 
     # Filter for has opponent champion.
     has_opponent_champion = create_has_champion_id_func(opponent_champion_id)
-    conditions = participants.apply(has_opponent_champion)
+    conditions = filtered.apply(has_opponent_champion)
     filtered =  filtered[conditions]
 
-    # Filter for has both on same lane.
-    
+    # Filter current champion on lane.
+    current_champion_on_lane = create_champion_on_lane(current_champion_id, lane)
+    conditions = filtered.apply(current_champion_on_lane)
+    filtered =  filtered[conditions]
+
+    # Filter opponent champion on lane.
+    opponent_champion_on_lane = create_champion_on_lane(opponent_champion_id, lane)
+    conditions = filtered.apply(opponent_champion_on_lane)
+    filtered =  filtered[conditions]
     
     return filtered
 
@@ -149,9 +171,10 @@ def display_participant(participant):
     display_champion(champion_name)
 
     for key, value in participant.items():
-        if 'lane' == key:
-            print(f"Lane: {value}")
+        if key in set(['lane', 'win']):
+            print(f"{key.capitalize()}: {value}")
 
+    for key, value in participant.items():
         if 'item' not in key:
             continue
 
