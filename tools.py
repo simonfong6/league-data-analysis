@@ -105,8 +105,36 @@ def winrate(current_champion, opponent_champion, item, dataset=None):
     return 0.5
 
 
-def filter_matching_lanes(current_champion, opponent_champion, matches):
+def has_champion_id(participants, champion_id):
+    participant_champion_id_matches = lambda participant: str(participant['championId']) == str(champion_id)
+
+    matches = map(participant_champion_id_matches, participants)
+    
+    has_a_single_match = any(matches)
+    
+    return has_a_single_match
+
+
+def create_has_champion_id_func(champion_id):
+    return lambda participants: has_champion_id(participants, champion_id)
+
+
+def filter_matching_lanes(current_champion_id, opponent_champion_id, matches):
     participants = matches['participants']
-    filtered = []
+
+    filtered = participants
+
+    # Filter for has current champion.
+    has_current_champion = create_has_champion_id_func(current_champion_id)
+    conditions = participants.apply(has_current_champion)
+    filtered =  filtered[conditions]
+
+    # Filter for has opponent champion.
+    has_opponent_champion = create_has_champion_id_func(opponent_champion_id)
+    conditions = participants.apply(has_opponent_champion)
+    filtered =  filtered[conditions]
+
+    # Filter for has both on same lane.
+    
     
     return filtered
