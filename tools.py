@@ -257,3 +257,20 @@ def display_items_by_winrate(participant_series):
     for item_id, win_rate in item_win_rates.most_common():
         uses = item_used[item_id]
         display_item_with_winrate(item_id, win_rate, uses)
+
+
+def show_item_winrates(current_champion, opponent_champion, lane, matches):
+    current_champion_id = convert_champion_name_to_id(current_champion)
+    opponent_champion_id = convert_champion_name_to_id(opponent_champion)
+
+    # Find all matches with those two champions on the specified lane.
+    filtered = filter_matching_lanes(current_champion_id, opponent_champion_id, lane, matches)
+
+    # For all the matches, extract only data about the current champion.
+    reduced = reduce_participants(filtered, current_champion_id)
+
+    # Reduce the dictionary to only relevant keys.
+    reduced_keys = filter_participant_series_keys(reduced)
+
+    # Display the win rates of each item by highest first.
+    display_items_by_winrate(reduced_keys)
