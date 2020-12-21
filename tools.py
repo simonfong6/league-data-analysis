@@ -126,7 +126,7 @@ def create_champion_on_lane(champion_id, lane):
         matches_champion_func = lambda participant: participant['championId'] == champion_id
         matches_champion = filter(matches_champion_func, participants)
         matches_champion = list(matches_champion)
-        participant, = matches_champion
+        participant = matches_champion[0]
 
         # Check if lane matches.
         return participant['timeline']['lane'] == lane
