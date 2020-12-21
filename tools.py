@@ -172,6 +172,11 @@ def reduce_participants(participants_series, champion_id):
 
     return reduced
 
+def filter_participant_series_keys(participants_series):
+    filtered = participants_series.apply(filter_participant)
+    return filtered
+
+
 def display_participant(participant):
     champion_id_to_champion = create_champion_dict()
     item_map = create_item_map()
@@ -197,3 +202,58 @@ def display_participant(participant):
         print(item_id)
         print(item_name)
         display_item(item_id)
+
+
+def convert_item_id_to_name(item_id):
+    item_map = create_item_map()
+    item_id = str(item_id)
+    item_name = item_map[item_id]['name']
+
+    return item_name
+
+
+def display_item_with_winrate(item_id, win_rate, uses):
+    item_id = int(item_id)
+    item_name = convert_item_id_to_name(item_id)
+    display_item(item_id)
+    percent = f"Win Rate: {win_rate:.0%}"
+    uses_string = f"Uses: {uses}"
+    print(item_name)
+    print(percent)
+    print(uses_string)
+
+
+def display_items_by_winrate(participant_series):
+    from collections import Counter
+
+    ITEM_KEYS = list(map(lambda num: f"item{num}", range(7)))
+
+    item_wins = Counter()
+    item_used = Counter()
+
+    for participant in participant_series:
+        win = participant['win']
+        for item_key in ITEM_KEYS:
+            item_id = participant[item_key]
+            
+            # Skip empty item slots
+            if item_id == 0:
+                continue
+
+            item_used[item_id] += 1
+            
+            if win:
+                item_wins[item_id] += 1
+
+    # Calculate win rates.
+    item_win_rates = Counter()
+    for item_id, item_uses in item_used.items():
+        wins = item_wins[item_id]
+        win_rate = wins / item_uses
+        
+        item_win_rates[item_id] = win_rate
+
+    # Sort by highest win rate and display.
+    for item_id, win_rate in item_win_rates.most_common():
+        uses = item_used[item_id]
+        display_item_with_winrate(item_id, win_rate, uses)
