@@ -272,5 +272,9 @@ def show_item_winrates(current_champion, opponent_champion, lane, matches):
     # Reduce the dictionary to only relevant keys.
     reduced_keys = filter_participant_series_keys(reduced)
 
+    # Number of matches
+    matches_count = reduced_keys.count()
+    print(f"Number Matches: {matches_count}")
+
     # Display the win rates of each item by highest first.
     display_items_by_winrate(reduced_keys)
